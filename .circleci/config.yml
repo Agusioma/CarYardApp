@@ -63,6 +63,8 @@ jobs:
                 --runtime python \
                 --functions-version 4 \
                 --os-type Linux
+                --runtime-version 3.10
+
             else
               echo "Function App already exists."
             fi
