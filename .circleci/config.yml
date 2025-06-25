@@ -27,6 +27,9 @@ jobs:
               -u $AZURE_CLIENT_ID \
               -p $AZURE_CLIENT_SECRET \
               --tenant $AZURE_TENANT_ID
+      - run:
+          name: Set subscription
+          command: az account set --subscription 53ba2ba5-7b7f-4041-bb2b-a84be0c401ae
 
       - run:
           name: Ensure Function App + Storage Account exist
