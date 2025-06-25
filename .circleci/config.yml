@@ -58,7 +58,8 @@ jobs:
                 --resource-group "$AZURE_RESOURCE_GROUP_NAME" \
                 --consumption-plan-location "$AZURE_LOCATION" \
                 --runtime python \
-                --functions-version 4
+                --functions-version 4 \
+                --os-type Linux
             else
               echo "Function App already exists."
             fi
