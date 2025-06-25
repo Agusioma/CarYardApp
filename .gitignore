@@ -1,0 +1,43 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.eggs/
+*.manifest
+*.spec
+
+# Local environment / secrets
+local.settings.json
+
+# Azure Functions Core Tools artifacts
+.azure/
+bin/
+obj/
+.vscode/
+
+# Python virtual environment
+.env/
+.venv/
+env/
+venv/
+
+# macOS
+.DS_Store
+
+# VS Code settings
+.vscode/
+
+# Test output
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# CircleCI
+.circleci/cache/

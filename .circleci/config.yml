@@ -1,0 +1,40 @@
+version: 2.1
+
+executors:
+  python-executor:
+    docker:
+      - image: cimg/python:3.10
+    working_directory: ~/project
+
+jobs:
+  deploy:
+    executor: python-executor
+    steps:
+      - checkout
+      - run:
+          name: Install Azure CLI
+          command: |
+            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      - run:
+          name: Install Python deps
+          command: pip install -r requirements.txt
+      - run:
+          name: Login to Azure
+          command: |
+            az login --service-principal \
+              -u $AZURE_CLIENT_ID \
+              -p $AZURE_CLIENT_SECRET \
+              --tenant $AZURE_TENANT_ID
+      - run:
+          name: Publish Function App
+          command: |
+            npm install -g azure-functions-core-tools@4 --unsafe-perm true
+            func azure functionapp publish $AZURE_FUNCTION_APP_NAME --python
+
+workflows:
+  deploy_main:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: main
