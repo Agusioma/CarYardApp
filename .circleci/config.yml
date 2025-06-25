@@ -80,7 +80,7 @@ jobs:
           name: Deploy Azure Function App
           command: |
             npm install -g azure-functions-core-tools@4 --unsafe-perm true
-            func azure functionapp publish "$AZURE_FUNCTION_APP_NAME" --python
+            az functionapp publish "$AZURE_FUNCTION_APP_NAME" --python --debug
 
 workflows:
   deploy_main:
