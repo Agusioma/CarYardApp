@@ -64,14 +64,17 @@ jobs:
                 --functions-version 4 \
                 --os-type Linux
 
-              az functionapp config set \
-                --name "$AZURE_FUNCTION_APP_NAME" \
-                --resource-group "$AZURE_RESOURCE_GROUP_NAME" \
-                --linux-fx-version "PYTHON|3.10"
-
             else
               echo "Function App already exists."
             fi
+
+      - run:
+          name: Force correct Python version
+          command: |
+            az functionapp config set \
+              --name "$AZURE_FUNCTION_APP_NAME" \
+              --resource-group "$AZURE_RESOURCE_GROUP_NAME" \
+              --linux-fx-version "PYTHON|3.10"
 
       - run:
           name: Deploy Azure Function App
