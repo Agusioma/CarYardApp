@@ -14,5 +14,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(str(result), mimetype="application/json")
     except Exception as e:
         logging.error(f"ERROR in get_cars: {str(e)}")
-        return func.HttpResponse("Internal server error", status_code=500)
+        return func.HttpResponse(f"ERROR in get_cars: {str(e)}", status_code=500)
 
