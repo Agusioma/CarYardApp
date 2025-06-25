@@ -1,32 +1,40 @@
 version: 2.1
 
-executors:
-  python-executor:
-    docker:
-      - image: cimg/python:3.10
-    working_directory: ~/project
+orbs:
+  node: circleci/node@7.1.0
+  azure-cli: circleci/azure-cli@1.2.0
 
 jobs:
   deploy:
-    executor: python-executor
+    docker:
+      - image: cimg/python:3.10
     steps:
       - checkout
+
+      # Install Node.js and npm (needed for Azure Function Core Tools)
+      - node/install:
+          node-version: '18.17'
+
+      # Install Azure CLI
+      - azure-cli/install
+
+      # Install Python dependencies
       - run:
-          name: Install Azure CLI
-          command: |
-            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-      - run:
-          name: Install Python deps
+          name: Install Python dependencies
           command: pip install -r requirements.txt
+
+      # Login to Azure
       - run:
-          name: Login to Azure
+          name: Azure CLI login
           command: |
             az login --service-principal \
               -u $AZURE_CLIENT_ID \
               -p $AZURE_CLIENT_SECRET \
               --tenant $AZURE_TENANT_ID
+
+      # Install Azure Functions Core Tools and deploy
       - run:
-          name: Publish Function App
+          name: Deploy Azure Functions App
           command: |
             npm install -g azure-functions-core-tools@4 --unsafe-perm true
             func azure functionapp publish $AZURE_FUNCTION_APP_NAME --python
