@@ -45,14 +45,19 @@ jobs:
             fi
 
             # Check or create function app
-            az functionapp show --name $AZURE_FUNCTION_APP_NAME --resource-group $AZURE_RESOURCE_GROUP_NAME || \
+            if ! az functionapp show --name "$AZURE_FUNCTION_APP_NAME" --resource-group "$AZURE_RESOURCE_GROUP_NAME" &>/dev/null; then
+              echo "Function App not found. Creating..."
               az functionapp create \
-                --name $AZURE_FUNCTION_APP_NAME \
-                --storage-account $AZURE_STORAGE_ACCOUNT \
-                --resource-group $AZURE_RESOURCE_GROUP_NAME \
-                --consumption-plan-location $AZURE_LOCATION \
+                --name "$AZURE_FUNCTION_APP_NAME" \
+                --storage-account "$AZURE_STORAGE_ACCOUNT" \
+                --resource-group "$AZURE_RESOURCE_GROUP_NAME" \
+                --consumption-plan-location "$AZURE_LOCATION" \
                 --runtime python \
                 --functions-version 4
+            else
+              echo "Function App already exists."
+            fi
+
 
       - run:
           name: Deploy Azure Function App
