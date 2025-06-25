@@ -27,15 +27,22 @@ jobs:
               -u $AZURE_CLIENT_ID \
               -p $AZURE_CLIENT_SECRET \
               --tenant $AZURE_TENANT_ID
+
       - run:
-          name: Set subscription
-          command: az account set --subscription 53ba2ba5-7b7f-4041-bb2b-a84be0c401ae
+          name: Register Microsoft.Storage provider
+          command: |
+            echo "Registering Microsoft.Storage resource provider..."
+            az provider register --namespace Microsoft.Storage
 
       - run:
           name: Ensure Function App + Storage Account exist
           command: |
-            # Check or create storage account
-            # Robust check + creation for storage account
+            AZURE_RESOURCE_GROUP_NAME=${AZURE_RESOURCE_GROUP:-CarYardRG}
+            AZURE_LOCATION=${AZURE_LOCATION:-eastus}
+            AZURE_STORAGE_ACCOUNT=${AZURE_STORAGE_ACCOUNT:-caryardstorage}
+            AZURE_FUNCTION_APP_NAME=${AZURE_FUNCTION_APP_NAME}
+
+            echo "Checking storage account..."
             if ! az storage account show --name "$AZURE_STORAGE_ACCOUNT" --resource-group "$AZURE_RESOURCE_GROUP_NAME" &>/dev/null; then
               echo "Storage account not found. Creating..."
               az storage account create \
@@ -47,7 +54,7 @@ jobs:
               echo "Storage account already exists."
             fi
 
-            # Check or create function app
+            echo "Checking function app..."
             if ! az functionapp show --name "$AZURE_FUNCTION_APP_NAME" --resource-group "$AZURE_RESOURCE_GROUP_NAME" &>/dev/null; then
               echo "Function App not found. Creating..."
               az functionapp create \
@@ -61,12 +68,11 @@ jobs:
               echo "Function App already exists."
             fi
 
-
       - run:
           name: Deploy Azure Function App
           command: |
             npm install -g azure-functions-core-tools@4 --unsafe-perm true
-            func azure functionapp publish $AZURE_FUNCTION_APP_NAME --python
+            func azure functionapp publish "$AZURE_FUNCTION_APP_NAME" --python
 
 workflows:
   deploy_main:
