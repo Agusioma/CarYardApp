@@ -37,11 +37,6 @@ jobs:
       - run:
           name: Ensure Function App + Storage Account exist
           command: |
-            AZURE_RESOURCE_GROUP_NAME=${AZURE_RESOURCE_GROUP:-CarYardRG}
-            AZURE_LOCATION=${AZURE_LOCATION:-eastus}
-            AZURE_STORAGE_ACCOUNT=${AZURE_STORAGE_ACCOUNT:-caryardstorage}
-            AZURE_FUNCTION_APP_NAME=${AZURE_FUNCTION_APP_NAME}
-
             echo "Checking storage account..."
             if ! az storage account show --name "$AZURE_STORAGE_ACCOUNT" --resource-group "$AZURE_RESOURCE_GROUP_NAME" &>/dev/null; then
               echo "Storage account not found. Creating..."
