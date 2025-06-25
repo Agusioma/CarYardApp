@@ -29,10 +29,13 @@ jobs:
               --tenant $AZURE_TENANT_ID
 
       - run:
-          name: Register Microsoft.Storage provider
+          name: Register Microsoft.Storage and Microsoft.Web provider
           command: |
             echo "Registering Microsoft.Storage resource provider..."
             az provider register --namespace Microsoft.Storage
+
+            echo "Registering Microsoft.Web resource provider..."
+            az provider register --name Microsoft.Web
 
       - run:
           name: Ensure Function App + Storage Account exist
