@@ -6,8 +6,8 @@ import traceback
 def get_connection():
     try:
         conn_str = os.getenv("SQL_CONNECTION_STRING")
-        if not conn_str:
-            raise ValueError("SQL_CONNECTION_STRING is not set in environment variables.")
+        '''if not conn_str:
+            raise ValueError("SQL_CONNECTION_STRING is not set in environment variables.")'''
         return pyodbc.connect(conn_str)
     except Exception as e:
         logging.error("Failed to establish DB connection.")
