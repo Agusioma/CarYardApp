@@ -11,19 +11,15 @@ jobs:
     steps:
       - checkout
 
-      # Install Node.js and npm (needed for Azure Function Core Tools)
       - node/install:
           node-version: '18.17'
 
-      # Install Azure CLI
       - azure-cli/install
 
-      # Install Python dependencies
       - run:
           name: Install Python dependencies
           command: pip install -r requirements.txt
 
-      # Login to Azure
       - run:
           name: Azure CLI login
           command: |
@@ -32,9 +28,25 @@ jobs:
               -p $AZURE_CLIENT_SECRET \
               --tenant $AZURE_TENANT_ID
 
-      # Install Azure Functions Core Tools and deploy
       - run:
-          name: Deploy Azure Functions App
+          name: Ensure Function App + Storage Account exist
+          command: |
+            # Check or create storage account
+            az storage account show --name $AZURE_STORAGE_ACCOUNT --resource-group $AZURE_RESOURCE_GROUP_NAME || \
+              az storage account create --name $AZURE_STORAGE_ACCOUNT --location $AZURE_LOCATION --resource-group $AZURE_RESOURCE_GROUP_NAME --sku Standard_LRS
+
+            # Check or create function app
+            az functionapp show --name $AZURE_FUNCTION_APP_NAME --resource-group $AZURE_RESOURCE_GROUP_NAME || \
+              az functionapp create \
+                --name $AZURE_FUNCTION_APP_NAME \
+                --storage-account $AZURE_STORAGE_ACCOUNT \
+                --resource-group $AZURE_RESOURCE_GROUP_NAME \
+                --consumption-plan-location $AZURE_LOCATION \
+                --runtime python \
+                --functions-version 4
+
+      - run:
+          name: Deploy Azure Function App
           command: |
             npm install -g azure-functions-core-tools@4 --unsafe-perm true
             func azure functionapp publish $AZURE_FUNCTION_APP_NAME --python
