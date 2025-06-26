@@ -15,4 +15,3 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     except Exception as e:
         logging.error(f"ERROR in get_cars: {str(e)}")
         return func.HttpResponse(f"ERROR in get_cars: {str(e)}", status_code=500)
-
