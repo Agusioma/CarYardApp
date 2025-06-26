@@ -9,12 +9,38 @@ def get_connection():
         logging.info("🔍 Environment Variables:")
         for key, value in os.environ.items():
             logging.info(f"{key} = {value}")
-        logging.info(conn_str)
-        '''if not conn_str:
-            raise ValueError("SQL_CONNECTION_STRING is not set in environment variables.")'''
-        return pyodbc.connect(conn_str)
+        logging.info(f"Using connection string: {conn_str}")
+
+        conn = pyodbc.connect(conn_str)
+        logging.info("✅ Successfully connected to the database.")
+
+        cursor = conn.cursor()
+
+        # List databases
+        logging.info("📚 Databases:")
+        cursor.execute("SELECT name FROM sys.databases")
+        for row in cursor.fetchall():
+            logging.info(f"  - {row.name}")
+
+        # Switch to target DB if needed
+        # cursor.execute("USE your_database_name")
+
+        # List schemas
+        logging.info("📂 Schemas:")
+        cursor.execute("SELECT name FROM sys.schemas")
+        for row in cursor.fetchall():
+            logging.info(f"  - {row.name}")
+
+        # List tables
+        logging.info("🧾 Tables:")
+        cursor.execute("SELECT TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'")
+        for row in cursor.fetchall():
+            logging.info(f"  - {row.TABLE_SCHEMA}.{row.TABLE_NAME}")
+
+        return conn
+
     except Exception as e:
-        logging.error("Failed to establish DB connection.")
+        logging.error("❌ Failed to establish DB connection.")
         logging.error(f"Error: {e}")
         logging.error("Stack trace:\n" + traceback.format_exc())
         raise  # Re-raise the exception after logging it
