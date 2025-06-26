@@ -11,7 +11,10 @@ def get_connection():
         logging.info("✅ Successfully connected to the database.")
 
         cursor = conn.cursor()
-        cursor.execute("USE myDatabase")
+
+        cursor.execute("SELECT DB_NAME()")
+        current_db = cursor.fetchone()[0]
+        logging.info(f"🧭 Currently using database: {current_db}")
 
         # List databases
         logging.info("📚 Databases:")
