@@ -6,15 +6,12 @@ import traceback
 def get_connection():
     try:
         conn_str = os.getenv("SQLCONNSTR_SQL_CONNECTION_STRING")
-        logging.info("🔍 Environment Variables:")
-        for key, value in os.environ.items():
-            logging.info(f"{key} = {value}")
-        logging.info(f"Using connection string: {conn_str}")
 
         conn = pyodbc.connect(conn_str)
         logging.info("✅ Successfully connected to the database.")
 
         cursor = conn.cursor()
+        cursor.execute("USE myDatabase")
 
         # List databases
         logging.info("📚 Databases:")
