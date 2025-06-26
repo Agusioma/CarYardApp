@@ -8,7 +8,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         conn = get_connection()
         logging.info("Connected to DB")
         cursor = conn.cursor()
-        cursor.execute("SELECT Name, Email FROM dbo.Salesmen")
+        cursor.execute("SELECT Name, Email FROM myDatabase.dbo.Salesmen")
         rows = cursor.fetchall()
         result = [{"name": r[0], "email": r[1]} for r in rows]
         return func.HttpResponse(str(result), mimetype="application/json")
