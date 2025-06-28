@@ -69,7 +69,7 @@ jobs:
             fi
 
       - run:
-          name: Force correct Python version
+          name: Enforce correct Python version
           command: |
             az functionapp config set \
               --name "$AZURE_FUNCTION_APP_NAME" \

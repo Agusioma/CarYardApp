@@ -9,8 +9,6 @@ __pycache__/
 *.manifest
 *.spec
 
-# Local environment / secrets
-local.settings.json
 
 # Azure Functions Core Tools artifacts
 .azure/
